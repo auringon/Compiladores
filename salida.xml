@@ -1,0 +1,13 @@
+<data>
+	<table id="persona">
+		<column id="123456">
+			1495256
+		</column>
+		<column id="nombre">
+			Juan Perez
+		</column>
+	</table>
+	<sql id="select_all">
+		select * from persona order by ci
+	</sql>
+</data>
