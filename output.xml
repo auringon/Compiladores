@@ -6,8 +6,8 @@
 		<column id="nombre">
 			Juan Perez
 		</column>
+		<sql id="select_all">
+			select * from persona order by ci
+		</sql>
 	</table>
-	<sql id="select_all">
-		select * from persona order by ci
-	</sql>
 </data>

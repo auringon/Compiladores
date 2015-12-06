@@ -271,8 +271,7 @@ void sigLex()
 				}
 			}
 			if (c==EOF)
-				error("Se llego al fin de archivo sin finalizar un comentario");
-	
+			error("Se llego al fin de archivo sin finalizar un comentario");
 			sprintf(e.lexema,id);
 			e.compLex=LITERAL_CADENA;
 			insertar(e);
@@ -438,27 +437,22 @@ void sigLex()
 					}
 				}
 			break;
-		}
-		
+		}		
 		
 		else if (c==':')
 		{
-			
 				t.compLex=DOS_PUNTOS;
 				t.pe=buscar(":");
 				break;
 			
 		}
-		
 		else if (c==',')
 		{
 			t.compLex=COMA;
 			t.pe=buscar(",");
 			break;
 		}
-		
-		
-		
+			
 		else if (c=='[')
 		{
 			t.compLex=L_CORCHETE;
@@ -535,9 +529,7 @@ void attribute_name(){
 	if(LITERAL_CADENA== t.compLex){
 		fprintf(salida," ");
 		fprintf(salida,"%s",t.pe->lexema);
-
-		match(LITERAL_CADENA);
-		
+		match(LITERAL_CADENA);		
 	}else {
 		cantidadError = cantidadError + 1;
 		printf("Error Sintactico Linea: %d \n", numLinea );
@@ -549,7 +541,6 @@ void attribute_value(){
 	if(LITERAL_CADENA== t.compLex){
 		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
 		match(LITERAL_CADENA);
-
 	}
 	else if(LITERAL_NUM== t.compLex){
 		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
@@ -593,10 +584,7 @@ void e(){
 		element();
 		e();
 	}
-	else if (R_CORCHETE== t.compLex){
-		//nada
-	}
-	else{
+	else if (R_CORCHETE != t.compLex){
 		cantidadError = cantidadError + 1;
 		printf("Error Sintactico Linea: %d \n", numLinea );
 		panicMode(10,t.compLex);
@@ -635,17 +623,13 @@ void element()
 			if (L_LLAVE==t.compLex)
 			{
 				attributes();
-				
 				fprintf(salida,">\n");
-
-
-				
 				match(COMA);
-				if(L_CORCHETE==t.compLex)
+				if(L_CORCHETE == t.compLex)
 				{
 					element_list();	
 				}
-				else if (LITERAL_CADENA== t.compLex)
+				else if (LITERAL_CADENA == t.compLex)
 				{
 					strcpy(lexema_elementList,t.pe->lexema);
 					tabulador();
@@ -654,16 +638,12 @@ void element()
 				}
 			
 		}else{
-			
 			fprintf(salida,">\n");
-
-
-				 
-			if(L_CORCHETE== t.compLex)
+			if(L_CORCHETE == t.compLex)
 			{
 				element_list();
 			}
-			else if (LITERAL_CADENA== t.compLex)
+			else if (LITERAL_CADENA == t.compLex)
 			{
 				element_list();
 			}
@@ -685,7 +665,7 @@ void element()
 	}
 	else{
 		cantidadError = cantidadError + 1;
-		printf("Error Sintactico\n");
+		printf("Error Sintactico Linea: %d \n", numLinea );
 		panicMode(1,t.compLex);
 	
 	}
@@ -698,7 +678,7 @@ void tagname(){
 		}
 		else{
 			cantidadError = cantidadError + 1;
-		printf("Error SintacticoLinea: %d \n", numLinea );
+			printf("Error Sintactico Linea: %d \n", numLinea );
 			panicMode(2,t.compLex);
 		}
 }
@@ -714,7 +694,7 @@ void attributes(){
 	}
 	else{
 		cantidadError = cantidadError + 1;
-		printf("Error SintacticoLinea: %d \n", numLinea );
+		printf("Error Sintactico Linea: %d \n", numLinea );
 		panicMode(3,t.compLex);
 	}
 }
@@ -753,7 +733,7 @@ void attribute(){
 	}
 	else {
 		cantidadError = cantidadError + 1;
-		printf("Error SintacticoLinea: %d \n", numLinea );
+		printf("Error Sintactico Linea: %d \n", numLinea );
 		panicMode(6,t.compLex);
 	}
 }
@@ -799,22 +779,21 @@ void panicMode(int produccion, int tokenActual){
 int main(int argc,char* args[])
 {
 	initTabla();
-		
 	if(argc > 1)
 	{
 		if (!(archivo=fopen(args[1],"rt"))){
 			printf("Archivo no encontrado.\n");
 			exit(1);
 		}
-		salida = fopen("salida.xml","w");
+		salida = fopen("output.xml","w");
 		
 		sigLex();		//inicia el lexer
 		element();		//inica parser
 		
 		if(cantidadError>0){
-			printf("Se ha encontrado errores en el fuente\n");
+			printf("ERROR\n");
 		}else {
-			printf("El fuente es sintacticamente correcto\n");
+			printf("Sintaxis correcta\n");
 		}
 		fclose(archivo);
 		fclose(salida);	
@@ -822,9 +801,5 @@ int main(int argc,char* args[])
 		printf("Debe pasar como parametro el path al archivo fuente.\n");
 		exit(1);
 	}
-
-
-	return 0;
-
-	
+	return 0;	
 }
