@@ -48,6 +48,8 @@ char *tokens[]={"LITERAL_CADENA",
 			"DOS_PUNTOS", 
 			"EMPTY"};
 
+
+
 /************* Conjuntos primeros y segundos ********************/
 char first[11][5]=
 		{
@@ -102,7 +104,7 @@ int cantidadError=0;	// Cantidad de errores
 
 typedef int bool;		// Tipo de Datos booleanos
 enum { false, true };	// Tipos booleanos
-FILE *salida;			// Salida del traductor
+//FILE *salida;			// Salida del traductor
 
 
 /************* Lexer ********************/
@@ -516,19 +518,19 @@ void scan(){
 	sigLex();
 }
 
-
+/*
 void tabulador(){
 	int i=0;
 	for(i=0;i<tabcounter;i++)
 	fprintf(salida,"%s","\t");
 }
-
+*/
 
 
 void attribute_name(){
 	if(LITERAL_CADENA== t.compLex){
-		fprintf(salida," ");
-		fprintf(salida,"%s",t.pe->lexema);
+		//fprintf(salida," ");
+		//fprintf(salida,"%s",t.pe->lexema);
 		match(LITERAL_CADENA);		
 	}else {
 		cantidadError = cantidadError + 1;
@@ -539,23 +541,23 @@ void attribute_name(){
 
 void attribute_value(){
 	if(LITERAL_CADENA== t.compLex){
-		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
+		//fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
 		match(LITERAL_CADENA);
 	}
 	else if(LITERAL_NUM== t.compLex){
-		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
+		//fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
 		match(LITERAL_NUM);
 	}
 	else if(PR_TRUE== t.compLex){
-		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
+		//fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
 		match(PR_TRUE);
 	}
 	else if(PR_FALSE== t.compLex){
-		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
+		//fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
 		match(PR_FALSE);
 	}
 	else if(PR_NULL== t.compLex){
-		fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
+		//fprintf(salida,"%c%s%c", '\"',t.pe->lexema, '\"');
 		match(PR_NULL);
 	}
 	else {
@@ -597,8 +599,9 @@ void match(int proximoToken){
 	}
 	else{
 		cantidadError = cantidadError + 1;
-		printf("Error no se esperaba: %s \n",tokens[proximoToken]);
-	}
+		printf("Cierre incompleto o se esperaba: %s \n",tokens[proximoToken]);
+		printf(" Linea: %d \n", numLinea );	
+}
 	
 }
 
@@ -611,10 +614,10 @@ void element()
 	{
 		match(L_CORCHETE);
 		strcpy(lexema_tagName,t.pe->lexema);
-		tabulador();
-		fprintf(salida,"<");
+		//tabulador();
+		//fprintf(salida,"<");
 	tabcounter++;
-		fprintf(salida,"%s",lexema_tagName);
+		//fprintf(salida,"%s",lexema_tagName);
 
 		tagname();
 		if(COMA == t.compLex)
@@ -623,7 +626,7 @@ void element()
 			if (L_LLAVE==t.compLex)
 			{
 				attributes();
-				fprintf(salida,">\n");
+				//fprintf(salida,">\n");
 				match(COMA);
 				if(L_CORCHETE == t.compLex)
 				{
@@ -632,13 +635,13 @@ void element()
 				else if (LITERAL_CADENA == t.compLex)
 				{
 					strcpy(lexema_elementList,t.pe->lexema);
-					tabulador();
-					fprintf(salida,"%s%s",lexema_elementList,"\n");
+					//tabulador();
+					//fprintf(salida,"%s%s",lexema_elementList,"\n");
 					element_list();
 				}
 			
 		}else{
-			fprintf(salida,">\n");
+			//fprintf(salida,">\n");
 			if(L_CORCHETE == t.compLex)
 			{
 				element_list();
@@ -650,11 +653,11 @@ void element()
 		}
 	}
 		tabcounter--;
-		tabulador();
-		fprintf(salida,"</");
+		//tabulador();
+		//fprintf(salida,"</");
 		
-		fprintf(salida,"%s",lexema_tagName);	
-		fprintf(salida,">\n");
+		//fprintf(salida,"%s",lexema_tagName);	
+		//fprintf(salida,">\n");
 		
 
 		match(R_CORCHETE);
@@ -728,7 +731,7 @@ void attribute(){
 	if (LITERAL_CADENA== t.compLex){
 		attribute_name();
 		match(DOS_PUNTOS);
-		fprintf(salida,"=");
+		//fprintf(salida,"=");
 		attribute_value();
 	}
 	else {
@@ -785,7 +788,7 @@ int main(int argc,char* args[])
 			printf("Archivo no encontrado.\n");
 			exit(1);
 		}
-		salida = fopen("output.xml","w");
+		//salida = fopen("output.xml","w");
 		
 		sigLex();		//inicia el lexer
 		element();		//inica parser
@@ -796,7 +799,7 @@ int main(int argc,char* args[])
 			printf("Sintaxis correcta\n");
 		}
 		fclose(archivo);
-		fclose(salida);	
+		//fclose(salida);	
 	}else{
 		printf("Debe pasar como parametro el path al archivo fuente.\n");
 		exit(1);

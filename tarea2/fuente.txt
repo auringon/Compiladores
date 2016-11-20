@@ -1,6 +1,6 @@
 [ "data",
   [ "table",
-    { "id" : "persona" },
+    { "id : "persona" },
     [ "column",
       { "id" : 123456 },
       "1495256"
